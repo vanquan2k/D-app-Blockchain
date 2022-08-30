@@ -1,6 +1,7 @@
 pragma solidity 0.4.25;
 
 contract Election {
+     uint public taskCount = 0;
     // Model a Candidate
     struct Candidate {
         uint id;
@@ -10,6 +11,7 @@ contract Election {
         uint  giatien;
         uint voteCount;
     }
+    mapping(uint => Task) public tasks;
 
     // Store accounts that have voted
     mapping(address => bool) public voters;
@@ -23,15 +25,14 @@ contract Election {
     event votedEvent (
         uint indexed _candidateId
     );
-    event claim {
+   event TaskClaim(
          uint id;
         string loaixe;
         string biensoxe;
         string hangmucbaohiem;
         uint  giatien;
         uint voteCount;
-    }
-
+  );
     constructor () public {
         addCandidate("Mazda","30B2_11111","ThanXe",1111);
         addCandidate("Vinfast","30B2_99999","ThanXe",10000);
@@ -42,6 +43,11 @@ contract Election {
     function addCandidate (string _loaixe, string _biensoxe,string _hangmucbaohiem,uint _giatien) private {
         candidatesCount ++;
         candidates[candidatesCount] = Candidate(candidatesCount, _loaixe,_biensoxe,_hangmucbaohiem,_giatien, 0);
+    }
+    function claimTask(string _loaixe, string _biensoxe,string _hangmucbaohiem,uint _giatien) public {
+                    taskCount ++;
+                    tasks[taskCount] = Task(taskCount, _loaixe,_biensoxe,_hangmucbaohiem, false);
+                    emit TaskClaim(taskCount, _content, false);
     }
  
    function vote (uint _candidateId) public {
@@ -60,4 +66,5 @@ contract Election {
         // trigger voted event
         emit votedEvent(_candidateId);
     }
+    
 }
