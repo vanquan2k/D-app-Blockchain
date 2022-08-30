@@ -27,6 +27,7 @@ App = {
       // Instantiate a new truffle contract from the artifact
       App.contracts.Election = TruffleContract(election);
       // Connect provider to interact with contract
+      // Ket noi voi node eth
       App.contracts.Election.setProvider(App.web3Provider);
 
       App.listenForEvents();
@@ -113,11 +114,13 @@ App = {
   castVote: function() {
     var candidateId = $('#candidatesSelect').val();
     App.contracts.Election.deployed().then(function(instance) {
+    
       return instance.vote(candidateId, { from: App.account });
     }).then(function(result) {
       // Wait for votes to update
       $("#content").hide();
       $("#loader").show();
+     
     }).catch(function(err) {
       console.error(err);
     });

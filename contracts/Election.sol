@@ -23,65 +23,11 @@ contract Election {
     event votedEvent (
         uint indexed _candidateId
     );
+  
 
     constructor () public {
         addCandidate("Mazda","30B2_11111","ThanXe",1111);
         addCandidate("Vinfast","30B2_99999","ThanXe",10000);
-        addCandidate("Audi","30B2_99999","VoXe",10000);
-        addCandidate("Mec","30B2_99999","VoXe",10000);
-        addCandidate("Kia","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
-        addCandidate("Lambor","30B2_99999","VoXe",10000);
        
         
     }
@@ -90,7 +36,7 @@ contract Election {
         candidatesCount ++;
         candidates[candidatesCount] = Candidate(candidatesCount, _loaixe,_biensoxe,_hangmucbaohiem,_giatien, 0);
     }
-
+ 
    function vote (uint _candidateId) public {
         // require that they haven't voted before
         require(!voters[msg.sender]);
