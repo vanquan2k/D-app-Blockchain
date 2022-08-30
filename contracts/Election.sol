@@ -23,7 +23,14 @@ contract Election {
     event votedEvent (
         uint indexed _candidateId
     );
-  
+    event claim {
+         uint id;
+        string loaixe;
+        string biensoxe;
+        string hangmucbaohiem;
+        uint  giatien;
+        uint voteCount;
+    }
 
     constructor () public {
         addCandidate("Mazda","30B2_11111","ThanXe",1111);
