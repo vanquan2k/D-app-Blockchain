@@ -55,15 +55,20 @@
       <section class="bg-dark text-center py-9">
         <div class="container">
           
-          <div class="img-wraper"><img class="img-fluid " src="assets/img/gallery/BlockChain_Banner-2.jpg" alt="" style="width: 2500px; " /></div>
+          <div class="img-wraper"><img class="img-fluid " src="assets/img/gallery/BlockChain_Banner-2.jpg" alt="" style="width: 600px; " /></div>
           <h1 class="text-primary fs-lg-7 fs-md-4 fs-3 my-4">DEMO INSURANCE BLOCKCHAIN </h1>
          
         </div><!-- end of .container-->
       </section><!-- <section> close ============================-->
       <!-- ============================================-->
     </main>
+     
+  
 
-    <div class="container" style="width: 650px;">
+
+
+   
+    <!-- <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
           <h4 id="accountAddress" class="text-center"></h4>
@@ -101,46 +106,121 @@
           </div>
         </div>
       </div> 
+    </div> -->
+
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="http://www.dappuniversity.com/free-download" target="_blank">Dapp University | Todo List</a>
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap d-none d-sm-none d-sm-block">
+          <small><a class="nav-link" href="#"><span id="accountAddress"></span></a></small>
+        </li>
+      </ul>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <main role="main" class="col-lg-12 d-flex justify-content-center">
+          <div id="loader" class="text-center">
+            <p class="text-center">Loading...</p>
+          </div>
+          <div id="content">
+            <form onSubmit="App.createTask(); return false;">
+              <input id="loaixe" type="text" class="form-control" placeholder="Them Loai Xe..." required>
+              <input id="biensoxe" type="text" class="form-control" placeholder="Them Bien So Xe..." required>
+              <input id="hangmucbaohiem" type="text" class="form-control" placeholder="Them Hang Muc Bao Hiem..." required>
+              <input id="giatien" type="text" class="form-control" placeholder="Them Gia Tien.." required>
+              <input type="submit" hidden="">
+            </form>
+            <ul id="taskList" class="list-unstyled">
+              <div class="taskTemplate" class="checkbox" style="display: none">
+                <label>
+                  <input type="checkbox" />
+                  <span class="content">Task content goes here...</span>
+                </label>
+              </div>
+            </ul>
+            <ul id="completedTaskList" class="list-unstyled">
+            </ul>
+          </div>
+        </main>
+      </div>
     </div>
+
+
+
+
  
-      <canvas id="myChart" width="400px" height="400px"></canvas>
-      <script>
-      const ctx = document.getElementById('myChart').getContext('2d');
-      const myChart = new Chart(ctx, {
-          type: 'bar',
+    <canvas id="line-chart" style="width: 300px; height: 300px;margin: auto" height="200" width="200"></canvas>
+    <script>
+        let line_chart = document.getElementById("line-chart");
+          new Chart(line_chart, {
+          type: 'scatter',
           data: {
-              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-              datasets: [{
-                  label: '# of Votes',
-                  data: [12, 19, 3, 5, 2, 3],
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)'
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)'
-                  ],
-                  borderWidth: 1
-              }]
-          },
+            datasets: [{ 
+                  label: 'Sample Data',
+                  data: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }] }],
+            },
           options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
+            responsive:false,
           }
-      });
+        });
+    </script>
+    
+    <canvas id="myChart" style="width: 500px; height: 500px;margin: auto" height="300" width="300"></canvas>
+      <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+       
+        
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+              responsive:false,
+                // scales: {
+                //     y: {
+                //         beginAtZero: true
+                //     }
+                // }
+            }
+        });
+
       </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

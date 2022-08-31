@@ -1,15 +1,15 @@
 App = {
-  web3Provider: null,
+ 
   contracts: {},
-  account: '0x0',
-  hasVoted: false,
 
-  init: function() {
-    return App.initWeb3();
+  load: async () => {
+    await App.loadWeb3()
+    await App.loadAccount()
+    await App.loadContract()
+    await App.render()
   },
 
-  initWeb3: function() {
-    // TODO: refactor conditional
+  loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
       // If a web3 instance is already provided by Meta Mask.
       App.web3Provider = web3.currentProvider;
@@ -19,116 +19,130 @@ App = {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
       web3 = new Web3(App.web3Provider);
     }
-    return App.initContract();
+  
   },
 
-  initContract: function() {
-    $.getJSON("Election.json", function(election) {
-      // Instantiate a new truffle contract from the artifact
-      App.contracts.Election = TruffleContract(election);
-      // Connect provider to interact with contract
-      // Ket noi voi node eth
-      App.contracts.Election.setProvider(App.web3Provider);
-
-      App.listenForEvents();
-
-      return App.render();
-    });
-  },
-
-  // Listen for events emitted from the contract
-  listenForEvents: function() {
-    App.contracts.Election.deployed().then(function(instance) {
-      // Restart Chrome if you are unable to receive this event
-      // This is a known issue with Metamask
-      // https://github.com/MetaMask/metamask-extension/issues/2393
-      instance.votedEvent({}, {
-        fromBlock: 0,
-        toBlock: 'latest'
-      }).watch(function(error, event) {
-        console.log("event triggered", event)
-        // Reload when a new vote is recorded
-        App.render();
-      });
-    });
-  },
-
-  render: function() {
-    var electionInstance;
-    var loader = $("#loader");
-    var content = $("#content");
-
-    loader.show();
-    content.hide();
-
-    // Load account data
-    web3.eth.getCoinbase(function(err, account) {
-      if (err === null) {
-        App.account = account;
-        $("#accountAddress").html("Your Account: " + account);
+  loadAccount: async () => {
+    // Set the current blockchain account
+        if(web3.currentProvider.enable){
+          //For metamask
+          web3.currentProvider.enable().then(function(acc){
+              App.account = account[8];
+              $("#accountAddress").html("Your Account: " + App.account);
+          });
+          console.log(App.account)
+      } else{
+          App.account = web3.eth.accounts[0];
+          $("#accountAddress").html("Your Account: " + App.account);
       }
-    });
-
-    // Load contract data
-    App.contracts.Election.deployed().then(function(instance) {
-      electionInstance = instance;
-      return electionInstance.candidatesCount();
-    }).then(function(candidatesCount) {
-      var candidatesResults = $("#candidatesResults");
-      candidatesResults.empty();
-
-      var candidatesSelect = $('#candidatesSelect');
-      candidatesSelect.empty();
-
-      for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.candidates(i).then(function(candidate) {
-          var id = candidate[0];
-          var loaixe = candidate[1];
-          var biensoxe = candidate[2];
-          var hangmucbaohiem = candidate[3];
-          var giatien = candidate[4];
-          var voteCount = candidate[5];
-
-          // Render candidate Result
-          var candidateTemplate = "<tr><th>" + id + "</th><td>" + loaixe + "</td><td>" +biensoxe +"</td><td>"+ hangmucbaohiem+"</td><td>"+giatien+"</td><td>"+voteCount+"</td><td>"
-          candidatesResults.append(candidateTemplate);
-
-          // Render candidate ballot option
-          var candidateOption = "<option value='" + id + "' >" + loaixe + "</ option>"
-          candidatesSelect.append(candidateOption);
-        });
-      }
-      return electionInstance.voters(App.account);
-    }).then(function(hasVoted) {
-      // Do not allow a user to vote
-      if(hasVoted) {
-        $('form').hide();
-      }
-      loader.hide();
-      content.show();
-    }).catch(function(error) {
-      console.warn(error);
-    });
   },
 
-  castVote: function() {
-    var candidateId = $('#candidatesSelect').val();
-    App.contracts.Election.deployed().then(function(instance) {
-    
-      return instance.vote(candidateId, { from: App.account });
-    }).then(function(result) {
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
-     
-    }).catch(function(err) {
-      console.error(err);
-    });
-  }
-};
+  loadContract: async () => {
+        // Create a JavaScript version of the smart contract
+        const todoList = await $.getJSON('Election.json')
+        // console.log(todoList)
+        App.contracts.Election  = TruffleContract(todoList)
+        App.contracts.Election.setProvider(App.web3Provider)
+        console.log(Election)
 
-$(function() {
-  $(window).load(function() {
-    App.init();
-  });
-});
+        // Hydrate the smart contract with values from the blockchain
+        App.todoList = await App.contracts.Election.deployed()
+        console.log(todoList)
+  },
+
+  render: async () => {
+    // // Prevent double render
+    if (App.loading) {
+      return
+    }
+
+    // // Update app loading state
+    App.setLoading(true)
+
+    // Render Account
+    $('#account').html(App.account)
+
+    // Render Tasks
+    await App.renderTasks()
+
+    // Update loading state
+    App.setLoading(false)
+  },
+
+  renderTasks: async () => {
+    // Load the total task count from the blockchain
+    const carCount = await App.todoList.carCount()
+    const $taskTemplate = $('.taskTemplate')
+
+    // Render out each task with a new task template
+    for (var i = 1; i <= carCount; i++) {
+      // Fetch the task data from the blockchain
+      const car = await App.todoList.cars(i)
+      const carId = car[0].toNumber()
+      const loaixe = car[1]
+      const biensoxe = car[2]
+      const hangmucbaohiem= car[3]
+      const giatien= car[4]
+      
+
+      // Create the html for the task
+      const $newTaskTemplate = $taskTemplate.clone()
+      $newTaskTemplate.find('.content').html(loaixe)
+      $newTaskTemplate.find('input')
+                      .prop('name', carId)
+                      .prop('checked', taskCompleted)
+                      .on('click', App.toggleCompleted)
+
+      // // Put the task in the correct list
+      if (taskCompleted) {
+        $('#completedTaskList').append($newTaskTemplate)
+      } else {
+        $('#taskList').append($newTaskTemplate)
+      }
+
+      // Show the task
+      $newTaskTemplate.show()
+    }
+  },
+
+  createTask: async () => {
+    App.setLoading(true)
+    const loaixe = $('#loaixe').val()
+    console.log(loaixe)
+    const biensoxe = $('#biensoxe').val()
+    console.log(biensoxe)
+    const hangmucbaohiem = $('#hangmucbaohiem').val()
+    console.log(hangmucbaohiem)
+    const giatien = $('#giatien').val()
+    console.log(giatien)
+    await App.todoList.addCar(loaixe)
+    console.log(addCar)
+    window.location.reload()
+  },
+  toggleCompleted: async (e) => {
+    App.setLoading(true)
+    const taskId = e.target.name
+    await App.todoList.toggleCompleted(taskId)
+    window.location.reload()
+  },
+
+
+  setLoading: (boolean) => {
+    App.loading = boolean
+    const loader = $('#loader')
+    const content = $('#content')
+    if (boolean) {
+      loader.show()
+      content.show()
+    } else {
+      loader.hide()
+      content.show()
+    }
+ }
+}
+
+$(() => {
+  $(window).load(() => {
+    App.load()
+  })
+})
